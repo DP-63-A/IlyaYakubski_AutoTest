@@ -1,21 +1,21 @@
 package com.stv.bdd.individualTests;
 
+import com.stv.bdd.factorypages.CustomerCarePage;
+import com.stv.bdd.factorypages.HomePage;
 import com.stv.bdd.tests.Factory;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.And;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
-import java.util.List;
 
 public class IndividualSteps {
     WebDriver driver = Factory.getDriver();
+    CustomerCarePage customerCarePage = new CustomerCarePage(driver);
+    HomePage homePage = new HomePage(driver);
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
     @Given("I am on the Login page")
     public void iAmOnTheLoginPage() {
@@ -24,59 +24,42 @@ public class IndividualSteps {
 
     @Then("I should see the Envelope button")
     public void iShouldSeeTheEnvelopeButton() {
-        WebElement envelopeButton = driver.findElement(By.xpath("//li[@class='contact']/a"));
-        Assert.assertTrue(envelopeButton.isDisplayed());
+        Assert.assertTrue("Envelope button is not displayed", customerCarePage.isEnvelopeButtonDisplayed());
     }
 
     @And("I click the Envelope button")
     public void iClickTheEnvelopeButton() {
-        WebElement envelopeButton = driver.findElement(By.xpath("//li[@class='contact']/a"));
-        envelopeButton.click();
+        customerCarePage.clickEnvelopeButton();
     }
 
     @Then("I should see the SEND TO CUSTOMER CARE button")
     public void iShouldSeeTheSendToCustomerCareButton() {
-        WebElement careButton = driver.findElement(By.xpath("//input[@type='submit' and @value='Send to Customer Care']"));
-        Assert.assertTrue(careButton.isDisplayed());
+        Assert.assertTrue("Send to Customer Care button is not displayed", customerCarePage.isSendToCustomerCareButtonDisplayed());
     }
 
     @And("I click the SEND TO CUSTOMER CARE button")
     public void iClickTheSendToCustomerCareButton() {
-        WebElement careButton = driver.findElement(By.xpath("//input[@type='submit' and @value='Send to Customer Care']"));
-        careButton.click();
+        customerCarePage.clickSendToCustomerCareButton();
     }
 
     @Then("I should see four error messages")
     public void iShouldSeeFourErrorMessages() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("name.errors")));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email.errors")));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("phone.errors")));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message.errors")));
-
-        Assert.assertTrue(driver.findElement(By.id("name.errors")).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.id("email.errors")).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.id("phone.errors")).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.id("message.errors")).isDisplayed());
+        Assert.assertEquals("Expected 4 error messages", 4, customerCarePage.getNumberOfErrorMessages());
     }
 
     @Then("I click the Envelope button again")
     public void iClickTheEnvelopeButtonAgain() {
-        WebElement envelopeButton = driver.findElement(By.xpath("//li[@class='contact']/a"));
-        envelopeButton.click();
+        customerCarePage.clickEnvelopeButton();
     }
 
     @And("I should see no error messages")
     public void iShouldSeeNoErrorMessages() {
-        List<WebElement> noErrorMessages = driver.findElements(By.xpath("//p[contains(@class, 'error')]"));
-        Assert.assertEquals("Expected 0 error messages, but found " + noErrorMessages.size(), 0, noErrorMessages.size());
+        Assert.assertEquals("Expected 0 error messages", 0, customerCarePage.getNumberOfErrorMessages());
     }
 
     @Then("I click on the site logo")
     public void iClickOnTheSiteLogo() {
-        WebElement logo = driver.findElement(By.className("logo"));
-        logo.click();
+        homePage.clickLogo();
     }
 
     @Then("I should be redirected to the home page")
@@ -85,5 +68,4 @@ public class IndividualSteps {
         String actualUrl = driver.getCurrentUrl();
         Assert.assertEquals("Did not navigate to home page!", expectedUrl, actualUrl);
     }
-
 }

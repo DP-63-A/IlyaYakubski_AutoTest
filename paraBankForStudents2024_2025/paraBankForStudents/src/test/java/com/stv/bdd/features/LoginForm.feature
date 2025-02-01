@@ -12,7 +12,7 @@ Feature: Login Form
     And I log out
 
     Examples:
-      | username     | password    | message                                 |
-      | OyashiroSama | Humiharahara|                                         |
-      | Fish         | invalid     |                                         |
-      |              |             | Please enter a username and password.   |
+      | username     | password    | message                                          |
+      | OyashiroSama | Humiharahara|                                                  |
+      | Fish         | invalid     | The username and password could not be verified. |
+      |              |             | Please enter a username and password.            |
